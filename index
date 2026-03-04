@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mishkah University — Where Knowledge Meets Purpose</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #0f0e0b;
+    --cream: #f5f0e8;
+    --gold: #b8922a;
+    --gold-light: #d4a843;
+    --warm: #e8e0d0;
+    --muted: #7a7060;
+    --accent: #1a3a2a;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE TEXTURE ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0.6;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.2rem 2.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(245,240,232,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(184,146,42,0.15);
+  }
+
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .nav-logo span { color: var(--gold); }
+
+  .nav-cta {
+    background: var(--accent);
+    color: var(--cream);
+    border: none;
+    padding: 0.6rem 1.4rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+    text-decoration: none;
+  }
+
+  .nav-cta:hover { background: var(--gold); transform: translateY(-1px); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding-top: 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-left {
+    padding: 6rem 3rem 4rem 5vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-eyebrow {
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.2s forwards;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3.2rem, 5vw, 5.5rem);
+    font-weight: 300;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.4s forwards;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+    font-weight: 300;
+    line-height: 1.7;
+    color: var(--muted);
+    max-width: 400px;
+    margin-bottom: 2.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.6s forwards;
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 2.5rem;
+    margin-bottom: 3rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.8s forwards;
+  }
+
+  .stat-item { }
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.2rem;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 0.72rem;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-top: 0.2rem;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    opacity: 0;
+    animation: fadeUp 0.8s 1s forwards;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: var(--cream);
+    border: none;
+    padding: 0.9rem 2.2rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+  }
+  .btn-primary:hover { background: var(--gold); transform: translateY(-2px); }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid rgba(15,14,11,0.25);
+    padding: 0.9rem 2.2rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 400;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+  }
+  .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* ── HERO RIGHT ── */
+  .hero-right {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-image-block {
+    position: absolute;
+    inset: 0;
+    background: var(--accent);
+    overflow: hidden;
+  }
+
+  .hero-image-block::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: 
+      radial-gradient(ellipse at 30% 40%, rgba(184,146,42,0.3) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 80%, rgba(26,58,42,0.8) 0%, transparent 50%);
+  }
+
+  .hero-pattern {
+    position: absolute;
+    inset: 0;
+    opacity: 0.06;
+    background-image: repeating-linear-gradient(
+      45deg,
+      var(--cream) 0px,
+      var(--cream) 1px,
+      transparent 1px,
+      transparent 40px
+    );
+  }
+
+  .hero-quote {
+    position: absolute;
+    bottom: 3rem;
+    left: 2.5rem;
+    right: 2.5rem;
+    color: var(--cream);
+    opacity: 0;
+    animation: fadeUp 0.8s 1.2s forwards;
+  }
+
+  .hero-quote blockquote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.5;
+    margin-bottom: 0.8rem;
+  }
+
+  .hero-quote cite {
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    opacity: 0.6;
+  }
+
+  .hero-big-number {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22vw;
+    font-weight: 300;
+    color: rgba(245,240,232,0.04);
+    line-height: 1;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 0 5vw;
+    margin: 4rem 0;
+  }
+  .divider-line { flex: 1; height: 1px; background: rgba(15,14,11,0.12); }
+  .divider-icon {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    color: var(--gold);
+    font-style: italic;
+  }
+
+  /* ── PROGRAMS SECTION ── */
+  .section {
+    padding: 5rem 5vw;
+  }
+
+  .section-label {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.2rem, 3.5vw, 3.5rem);
+    font-weight: 300;
+    line-height: 1.15;
+    margin-bottom: 3.5rem;
+    max-width: 600px;
+  }
+
+  .programs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5px;
+    background: rgba(15,14,11,0.1);
+    border: 1px solid rgba(15,14,11,0.1);
+  }
+
+  .program-card {
+    background: var(--cream);
+    padding: 2.5rem 2rem;
+    transition: background 0.3s;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .program-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 0; height: 2px;
+    background: var(--gold);
+    transition: width 0.4s ease;
+  }
+
+  .program-card:hover::after { width: 100%; }
+  .program-card:hover { background: var(--warm); }
+
+  .program-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.9rem;
+    color: var(--gold);
+    margin-bottom: 1rem;
+    font-style: italic;
+  }
+
+  .program-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.6rem;
+    line-height: 1.2;
+  }
+
+  .program-desc {
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.65;
+  }
+
+  /* ── WHY MISHKAH ── */
+  .why-section {
+    background: var(--accent);
+    color: var(--cream);
+    padding: 6rem 5vw;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .why-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      -45deg,
+      rgba(245,240,232,0.015) 0px,
+      rgba(245,240,232,0.015) 1px,
+      transparent 1px,
+      transparent 50px
+    );
+  }
+
+  .why-inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 5rem;
+    align-items: start;
+  }
+
+  .why-left .section-label { color: var(--gold-light); }
+  .why-left .section-title { color: var(--cream); max-width: 100%; }
+
+  .why-features {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+
+  .feature-item {
+    border-top: 1px solid rgba(245,240,232,0.15);
+    padding-top: 1.2rem;
+  }
+
+  .feature-icon {
+    font-size: 1.4rem;
+    margin-bottom: 0.7rem;
+  }
+
+  .feature-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--cream);
+    margin-bottom: 0.4rem;
+  }
+
+  .feature-text {
+    font-size: 0.8rem;
+    color: rgba(245,240,232,0.55);
+    line-height: 1.65;
+  }
+
+  /* ── FORM SECTION ── */
+  .form-section {
+    padding: 6rem 5vw;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: start;
+  }
+
+  .form-left .section-title { margin-bottom: 1rem; }
+
+  .form-left p {
+    font-size: 0.9rem;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 2rem;
+  }
+
+  .trust-items {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .trust-item {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+
+  .trust-dot {
+    width: 6px; height: 6px;
+    background: var(--gold);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ── FORM ── */
+  .register-form {
+    background: white;
+    padding: 3rem;
+    border: 1px solid rgba(15,14,11,0.08);
+    position: relative;
+  }
+
+  .register-form::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--gold));
+  }
+
+  .form-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+  }
+
+  .form-subtitle {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-bottom: 2rem;
+  }
+
+  .form-group {
+    margin-bottom: 1.2rem;
+  }
+
+  .form-group label {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin-bottom: 0.4rem;
+  }
+
+  .form-group input,
+  .form-group select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid rgba(15,14,11,0.15);
+    background: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s;
+    appearance: none;
+  }
+
+  .form-group input:focus,
+  .form-group select:focus {
+    border-color: var(--gold);
+  }
+
+  .form-group input::placeholder { color: var(--muted); }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+  .select-wrapper { position: relative; }
+  .select-wrapper::after {
+    content: '↓';
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    pointer-events: none;
+    font-size: 0.75rem;
+  }
+
+  .submit-btn {
+    width: 100%;
+    background: var(--accent);
+    color: var(--cream);
+    border: none;
+    padding: 1rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.25s;
+    margin-top: 0.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .submit-btn:hover { background: var(--gold); }
+  .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+  .form-note {
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-align: center;
+    margin-top: 1rem;
+    line-height: 1.5;
+  }
+
+  /* ── SUCCESS STATE ── */
+  .success-state {
+    display: none;
+    text-align: center;
+    padding: 3rem 1rem;
+  }
+
+  .success-state.visible { display: block; }
+  .register-form.submitted .form-content { display: none; }
+  .register-form.submitted .success-state { display: block; }
+
+  .success-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  .success-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .success-text {
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink);
+    color: rgba(245,240,232,0.5);
+    padding: 3rem 5vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .footer-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    color: var(--cream);
+    font-weight: 600;
+  }
+
+  .footer-logo span { color: var(--gold); }
+
+  footer p { font-size: 0.78rem; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; min-height: auto; }
+    .hero-right { height: 320px; }
+    .hero-left { padding: 5rem 1.5rem 3rem; }
+    .why-inner { grid-template-columns: 1fr; gap: 3rem; }
+    .form-section { grid-template-columns: 1fr; gap: 3rem; }
+    nav { padding: 1rem 1.5rem; }
+    .why-features { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    .register-form { padding: 2rem 1.5rem; }
+    .hero-stats { gap: 1.5rem; }
+    footer { flex-direction: column; text-align: center; }
+  }
+
+  /* ── SCROLL REVEAL ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── ERROR STATE ── */
+  .error-msg {
+    color: #c0392b;
+    font-size: 0.75rem;
+    margin-top: 0.8rem;
+    text-align: center;
+    display: none;
+  }
+  .error-msg.visible { display: block; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Mishkah <span>University</span></a>
+  <a href="#apply" class="nav-cta">Apply Now</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <p class="hero-eyebrow">Est. 2004 · Accredited University</p>
+    <h1 class="hero-title">
+      Education<br>
+      that builds<br>
+      <em>futures.</em>
+    </h1>
+    <p class="hero-subtitle">
+      Mishkah University offers rigorous academic programs rooted in Islamic scholarship and modern disciplines — preparing graduates who lead with knowledge, integrity, and purpose.
+    </p>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-num">12+</div>
+        <div class="stat-label">Programs</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">100%</div>
+        <div class="stat-label">Online Flexible</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">2</div>
+        <div class="stat-label">Decades of Excellence</div>
+      </div>
+    </div>
+    <div class="hero-actions">
+      <a href="#apply" class="btn-primary">Start Your Application</a>
+      <a href="#programs" class="btn-ghost">Explore Programs</a>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="hero-image-block">
+      <div class="hero-pattern"></div>
+      <div class="hero-big-number">م</div>
+      <div class="hero-quote">
+        <blockquote>"Seek knowledge from the cradle to the grave."</blockquote>
+        <cite>— A timeless principle</cite>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider">
+  <div class="divider-line"></div>
+  <div class="divider-icon">✦</div>
+  <div class="divider-line"></div>
+</div>
+
+<!-- PROGRAMS -->
+<section class="section" id="programs">
+  <p class="section-label reveal">Academic Programs</p>
+  <h2 class="section-title reveal">Disciplines built for a changing world.</h2>
+
+  <div class="programs-grid reveal">
+    <div class="program-card">
+      <div class="program-num">01</div>
+      <div class="program-name">Islamic Studies</div>
+      <p class="program-desc">Deep engagement with classical Islamic texts, jurisprudence, and contemporary issues in Muslim thought.</p>
+    </div>
+    <div class="program-card">
+      <div class="program-num">02</div>
+      <div class="program-name">Arabic Language</div>
+      <p class="program-desc">From foundational grammar to advanced literary fluency — classical and modern standard Arabic.</p>
+    </div>
+    <div class="program-card">
+      <div class="program-num">03</div>
+      <div class="program-name">Islamic Finance</div>
+      <p class="program-desc">Sharia-compliant financial theory and practice, preparing professionals for the global Islamic economy.</p>
+    </div>
+    <div class="program-card">
+      <div class="program-num">04</div>
+      <div class="program-name">Education & Da'wah</div>
+      <p class="program-desc">Equipping educators and community leaders with pedagogical tools grounded in Islamic values.</p>
+    </div>
+    <div class="program-card">
+      <div class="program-num">05</div>
+      <div class="program-name">Psychology & Counseling</div>
+      <p class="program-desc">Human behaviour and wellbeing from both Western academic and Islamic perspectives.</p>
+    </div>
+    <div class="program-card">
+      <div class="program-num">06</div>
+      <div class="program-name">Quran & Tajweed</div>
+      <p class="program-desc">Systematic study of recitation, memorization, and the sciences of the Quran.</p>
+    </div>
+  </div>
+</section>
+
+<!-- WHY MISHKAH -->
+<section class="why-section">
+  <div class="why-inner">
+    <div class="why-left">
+      <p class="section-label reveal">Why Mishkah</p>
+      <h2 class="section-title reveal">A university built on more than credentials.</h2>
+    </div>
+    <div class="why-features reveal">
+      <div class="feature-item">
+        <div class="feature-icon">🎓</div>
+        <div class="feature-title">Accredited Degrees</div>
+        <p class="feature-text">Recognised qualifications that open doors in Muslim-majority and Western countries alike.</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🌐</div>
+        <div class="feature-title">Fully Online</div>
+        <p class="feature-text">Study from anywhere in the world on your own schedule without compromising depth.</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">📖</div>
+        <div class="feature-title">World-Class Scholars</div>
+        <p class="feature-text">Learn directly from internationally respected Islamic academics and practitioners.</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🤝</div>
+        <div class="feature-title">Community-Centred</div>
+        <p class="feature-text">A global network of students and alumni united by shared values and mutual support.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- APPLY FORM -->
+<section class="form-section" id="apply">
+  <div class="form-left reveal">
+    <p class="section-label">Register Your Interest</p>
+    <h2 class="section-title">Take the first step.</h2>
+    <p>
+      Fill in the form and our admissions team will be in touch within 48 hours with program details, fees, and how to complete your application.
+    </p>
+    <div class="trust-items">
+      <div class="trust-item"><div class="trust-dot"></div>No commitment required</div>
+      <div class="trust-item"><div class="trust-dot"></div>Admissions team responds within 48hrs</div>
+      <div class="trust-item"><div class="trust-dot"></div>Flexible payment plans available</div>
+      <div class="trust-item"><div class="trust-dot"></div>Intake starts every semester</div>
+    </div>
+  </div>
+
+  <div class="register-form reveal" id="registerForm">
+    <div class="form-content">
+      <h3 class="form-title">Register Interest</h3>
+      <p class="form-subtitle">We'll get back to you within 48 hours.</p>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="firstName">First Name</label>
+          <input type="text" id="firstName" placeholder="Ahmed" required>
+        </div>
+        <div class="form-group">
+          <label for="lastName">Last Name</label>
+          <input type="text" id="lastName" placeholder="Al-Rashid" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" placeholder="ahmed@example.com" required>
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Phone / WhatsApp</label>
+        <input type="tel" id="phone" placeholder="+1 234 567 8900">
+      </div>
+
+      <div class="form-group">
+        <label for="country">Country</label>
+        <input type="text" id="country" placeholder="e.g. United States">
+      </div>
+
+      <div class="form-group">
+        <label for="program">Program of Interest</label>
+        <div class="select-wrapper">
+          <select id="program">
+            <option value="">— Select a program —</option>
+            <option>Islamic Studies</option>
+            <option>Arabic Language</option>
+            <option>Islamic Finance</option>
+            <option>Education & Da'wah</option>
+            <option>Psychology & Counseling</option>
+            <option>Quran & Tajweed</option>
+            <option>Not sure yet</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="howHeard">How did you hear about us?</label>
+        <div class="select-wrapper">
+          <select id="howHeard">
+            <option value="">— Select —</option>
+            <option>Google Search</option>
+            <option>Social Media</option>
+            <option>Friend / Family</option>
+            <option>Masjid / Community</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="submit-btn" id="submitBtn" onclick="submitForm()">
+        Send My Application
+      </button>
+
+      <p class="error-msg" id="errorMsg">Something went wrong. Please try again or email us directly.</p>
+
+      <p class="form-note">
+        By submitting, you agree to be contacted by Mishkah University admissions.<br>
+        We respect your privacy.
+      </p>
+    </div>
+
+    <div class="success-state">
+      <div class="success-icon">✦</div>
+      <h3 class="success-title">We'll be in touch.</h3>
+      <p class="success-text">
+        JazakAllah khayran for your interest in Mishkah University.<br>
+        Our admissions team will contact you within 48 hours.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Mishkah <span>University</span></div>
+  <p>© 2025 Mishkah University. All rights reserved.</p>
+  <p>admissions@mishkahu.com</p>
+</footer>
+
+<script>
+// ── SCROLL REVEAL ──
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// ── FORM SUBMIT → GOOGLE SHEETS ──
+// ⚠️ REPLACE THIS URL with your Google Apps Script Web App URL
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz4OlH7bjqPT3XkvKF2Ndj61LNNDu8msG4dmRjdIJyDZb6l4qwhnycIfigBERTdqc8h5g/exec';
+
+async function submitForm() {
+  const btn = document.getElementById('submitBtn');
+  const errorMsg = document.getElementById('errorMsg');
+  const form = document.getElementById('registerForm');
+
+  const firstName = document.getElementById('firstName').value.trim();
+  const lastName  = document.getElementById('lastName').value.trim();
+  const email     = document.getElementById('email').value.trim();
+  const phone     = document.getElementById('phone').value.trim();
+  const country   = document.getElementById('country').value.trim();
+  const program   = document.getElementById('program').value;
+  const howHeard  = document.getElementById('howHeard').value;
+
+  if (!firstName || !lastName || !email) {
+    errorMsg.textContent = 'Please fill in your name and email address.';
+    errorMsg.classList.add('visible');
+    return;
+  }
+
+  btn.textContent = 'Sending...';
+  btn.disabled = true;
+  errorMsg.classList.remove('visible');
+
+  const payload = {
+    firstName, lastName, email, phone, country, program, howHeard,
+    timestamp: new Date().toLocaleString()
+  };
+
+  try {
+    await fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    // no-cors means we can't read the response — assume success
+    form.classList.add('submitted');
+
+  } catch (err) {
+    btn.textContent = 'Send My Application';
+    btn.disabled = false;
+    errorMsg.textContent = 'Something went wrong. Please try again.';
+    errorMsg.classList.add('visible');
+  }
+}
+
+// Allow Enter key in inputs
+document.querySelectorAll('input').forEach(input => {
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') submitForm();
+  });
+});
+</script>
+
+</body>
+</html>
