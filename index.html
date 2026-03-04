@@ -867,7 +867,7 @@
         <div class="select-wrapper">
           <select id="howHeard">
             <option value="">— Select —</option>
-            <option>Google Search</option>
+            <option> Search</option>
             <option>Social Media</option>
             <option>Friend / Family</option>
             <option>Masjid / Community</option>
@@ -919,9 +919,9 @@ const observer = new IntersectionObserver((entries) => {
 
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-// ── FORM SUBMIT → GOOGLE SHEETS ──
-// ⚠️ REPLACE THIS URL with your Google Apps Script Web App URL
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz4OlH7bjqPT3XkvKF2Ndj61LNNDu8msG4dmRjdIJyDZb6l4qwhnycIfigBERTdqc8h5g/exec';
+// ── FORM SUBMIT →  SHEETS ──
+// ⚠️ REPLACE THIS URL with your  Apps Script Web App URL
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxQAHSHVgIYSGIslAa7br5OLOtVU0SXRoyJwjoehUz_SMc-PI79ANzuBfO4474A2cu-Qg/exec';
 
 async function submitForm() {
   const btn = document.getElementById('submitBtn');
